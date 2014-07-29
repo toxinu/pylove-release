@@ -59,4 +59,10 @@ Installation
 
 Not on Pypi for now. Clone this repository and install it with ``python setup.py install``.
 
+Packagers
+---------
+
+You can easily add your very own packager. Take a look at ``love_release/packagers`` directory.
+More documentations are coming.
+
 .. _LOVE2D: http://love2d.org/
