@@ -11,6 +11,7 @@ Usage
 Create your configuration file:
 
 ::
+
     love-release init --config=config.ini
     cat config.ini  # Truncated
     [general]
@@ -47,6 +48,7 @@ Create your configuration file:
 You'll have a nicely documented .``ini`` file. Let's build Windows 32 package:
 
 ::
+
     love-release build win32 --config=config.ini
     INFO:root:Love binary archive already in cache.
     INFO:root:Retrieving love binary archive. Done.
