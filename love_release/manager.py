@@ -46,13 +46,14 @@ class Manager(object):
                 if chunk:
                     f.write(chunk)
                     f.flush()
-        logging.info('Done.')
 
     def extract(self, system, version):
         assert (self.has(system, version)), "Need to download before"
-        with zipfile.ZipFile(os.path.join(
-                self.cache_dir,
-                self.get_zip_name(system, version)), "r") as z:
+        love_binary_archive_path = os.path.join(
+            self.cache_dir, self.get_zip_name(system, version))
+        logging.info(
+            'Extracting love binary archive (%s)' % love_binary_archive_path)
+        with zipfile.ZipFile(love_binary_archive_path, "r") as z:
             z.extractall(self.cache_dir)
         if system == 'macosx-x64':
             shutil.rmtree(os.path.join(self.cache_dir, '__MACOSX'))
@@ -64,4 +65,3 @@ class Manager(object):
         else:
             logging.info("Love binary archive already in cache.")
         self.extract(system, version)
-        logging.info('Retrieving love binary archive. Done.')

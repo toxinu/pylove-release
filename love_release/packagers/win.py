@@ -24,6 +24,10 @@ class Packager(BasePackager):
             'msvcr110.dll']
 
         super(Packager, self).__init__(*args)
+        if self.love_packager.package_config.get('exclude', None) is None:
+            self.love_packager.package_config['exclude'] = ''
+        self.love_packager.package_config[
+            'exclude'] += self.package_config.get('exclude')
 
     def package(self):
         love_binary_dir_path = self.prepare_love_binary()
@@ -35,7 +39,7 @@ class Packager(BasePackager):
             self.love_config.get('name')) + '.' + self.extension
 
         if os.path.exists(build_dir):
-            logging.info('Removing older package (%s)...' % build_dir)
+            logging.info('Removing older package (%s)' % build_dir)
             shutil.rmtree(build_dir)
         os.makedirs(build_dir)
 
@@ -49,15 +53,16 @@ class Packager(BasePackager):
 
         # Creating exe file
         with open(exe_path, 'wb') as output:
-            logging.info('Creating .exe file...')
-            with open(os.path.join(
-                    love_binary_dir_path, 'love.exe'), 'rb') as love_exe:
+            love_exe_path = os.path.join(love_binary_dir_path, 'love.exe')
+            logging.info('Creating .exe file (%s)' % exe_path)
+            with open(love_exe_path, 'rb') as love_exe:
                 output.write(love_exe.read())
             with open(love_package_path, 'rb') as love_package:
                 output.write(love_package.read())
         os.remove(love_package_path)
 
         # Copy DLL's
+        logging.info('Copying dlls')
         for dll in self.dlls:
             shutil.copy(
                 os.path.join(love_binary_dir_path, dll),
@@ -65,6 +70,8 @@ class Packager(BasePackager):
 
         if self.package_config.get('compress'):
             if self.package_config.get('compression') == 'zip':
-                self.zip_dir(
-                    build_dir,
-                    os.path.join(self.build_dir, name + '.zip'))
+                zip_path = os.path.join(self.build_dir, name + '.zip')
+                logging.info('Creating .zip file (%s)' % zip_path)
+                self.zip_dir(build_dir, zip_path)
+
+        logging.info('Done.')

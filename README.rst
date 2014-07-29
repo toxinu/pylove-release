@@ -37,6 +37,7 @@ Create your configuration file:
     # A .exe binary for Windows 32bit platform.
     #
     # - name: Package name
+    # - exclude: Comma separated values of regexp path to exclude in package
     # - compress: Will provide compressed archive
     # - compression: Only zip is available
     # - custom_love_binary: Relative or absolute path to love zipped archive
@@ -48,16 +49,20 @@ Create your configuration file:
 
     [...]
 
-You'll have a nicely documented .``ini`` file. Let's build Windows 32 package:
+You'll have a nicely documented ``.ini`` file. Let's build Windows 32 package:
 
 ::
 
     love-release build win32 --config=config.ini
     INFO:root:Love binary archive already in cache.
-    INFO:root:Retrieving love binary archive. Done.
-    INFO:root:Removing older package (./build/Invaders-win32)...
-    INFO:root:Creating .love file...
-    INFO:root:Creating .exe file...
+    INFO:root:Extracting love binary archive (/home/socketubs/Documents/pylove-release/cache/love-0.9.1-win32.zip)
+    INFO:root:Removing older package (/home/socketubs/Documents/pylove-release/build/Invaders-win32)
+    INFO:root:Creating .love file (/home/socketubs/Documents/pylove-release/build/Invaders-win32/Invaders.love)
+    INFO:root:Done.
+    INFO:root:Creating .exe file (/home/socketubs/Documents/pylove-release/build/Invaders-win32/Invaders.exe)
+    INFO:root:Copying dlls
+    INFO:root:Creating .zip file (/home/socketubs/Documents/pylove-release/build/Invaders-win32.zip)
+    INFO:root:Done.
 
 Installation
 ------------

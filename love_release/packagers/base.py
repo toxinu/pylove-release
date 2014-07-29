@@ -1,4 +1,6 @@
 import os
+import re
+import logging
 import zipfile
 from ..manager import Manager
 
@@ -50,14 +52,24 @@ class BasePackager(object):
             base_name += '.zip'
         return base_name
 
-    def zip_dir(self, src, dst):
+    def zip_dir(self, src, dst, excludes=[]):
         zip_file = zipfile.ZipFile(dst, 'w')
 
         initial_dir = os.getcwd()
         os.chdir(os.path.join(src, '..'))
 
+        exclude_regex = []
+        for r in excludes:
+            exclude_regex.append(re.compile(r))
+        source_prefix_length = len(self.config.get('source_dir') + os.pathsep)
+
         for root, dirs, files in os.walk(os.path.basename(src)):
             for f in files:
+                p = os.path.join(root, f)
+                for r in exclude_regex:
+                    if r.match(p[source_prefix_length:]):
+                        logging.info('Exclude %s from package' % p)
+                        continue
                 zip_file.write(os.path.join(root, f))
         zip_file.close()
 

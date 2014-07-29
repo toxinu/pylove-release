@@ -49,12 +49,17 @@ source_dir = source
 [package:love]
 # A simple .love package for all platforms
 #
+# - name: Package name
+# - exclude: Comma separated values of regexp path to exclude in package
+#            Base path is relative to source_dir.
 name = Invaders
 
 [package:win32]
 # A .exe binary for Windows 32bit platform.
 #
 # - name: Package name
+# - exclude: Comma separated values of regexp path to exclude in package
+#            Base path is relative to source_dir.
 # - compress: Will provide compressed archive
 # - compression: Only zip is available
 # - custom_love_binary: Relative or absolute path to love zipped archive
@@ -68,6 +73,8 @@ compression = zip
 # A .exe binary for Windows 64bit platform.
 #
 # - name: Package name
+# - exclude: Comma separated values of regexp path to exclude in package
+#            Base path is relative to source_dir.
 # - compress: Will provide compressed archive
 # - compression: Only zip is available
 # - custom_love_binary: Relative or absolute path to love zipped archive.
@@ -81,6 +88,8 @@ compression = zip
 # A .app package for OSX platform.
 #
 # - name: Package name
+# - exclude: Comma separated values of regexp path to exclude in package
+#            Base path is relative to source_dir.
 # - compress: Will provide compressed archive
 # - compression: Only zip is available
 name = Invaders
