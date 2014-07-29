@@ -1,0 +1,132 @@
+#!/usr/bin/env python
+import os
+import sys
+import logging
+
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
+
+from docopt import docopt
+
+from love_release import __version__
+
+logging.basicConfig(level=logging.DEBUG)
+
+packages = ['love', 'win32', 'win64']
+__doc__ = """Naval Fate.
+
+Usage:
+  love-release init --config=<path>
+  love-release build <package> [--config=<path>]
+  love-release (-h | --help)
+  love-release (-v | --version)
+
+Package must be: %s.
+
+Options:
+  -h --help             Show this screen.
+  --version             Show version.
+  --config=<path>       Configuration file path. [default: config.ini].
+
+""" % ', '.join(packages)
+
+template = """[general]
+# - name: Game name
+# - version: Game version
+# - copyright: Game copyright
+# - love_version: Version of Love2D to retrieve
+# - build_dir: Relative or absolute path to a build directory
+# - source_dir: Relative or absolute path to game source directory
+name = Invaders
+version = 0.0.1
+copyright = © 2014 Socketubs
+love_version = 0.9.1
+build_dir = build
+source_dir = source
+
+[package:love]
+# A simple .love package for all platforms
+#
+name = Invaders
+
+[package:win32]
+# A .exe binary for Windows 32bit platform.
+#
+# - name: Package name
+# - compress: Will provide compressed archive
+# - compression: Only zip is available
+# - custom_love_binary: Relative or absolute path to love zipped archive
+#                       Extracted folder must have same name as
+#                       zip without .zip
+name = Invaders-win32
+compress = true
+compression = zip
+
+[package:win64]
+# A .exe binary for Windows 64bit platform.
+#
+# - name: Package name
+# - compress: Will provide compressed archive
+# - compression: Only zip is available
+# - custom_love_binary: Relative or absolute path to love zipped archive.
+#                       Extracted folder must have same name as
+#                       zip without .zip
+name = Invaders-win64
+compress = true
+compression = zip
+
+[package:osx]
+# A .app package for OSX platform.
+#
+# - name: Package name
+# - compress: Will provide compressed archive
+# - compression: Only zip is available
+name = Invaders
+compress = true
+compression = zip
+"""
+
+if __name__ == "__main__":
+    args = docopt(__doc__, version=__version__)
+    print(args)
+
+    config = ConfigParser()
+
+    # Read config file
+    if args.get('build'):
+        try:
+            config.read(args.get('--config'))
+        except Exception as err:
+            logging.error('Error while reading your configuration file.')
+            logging.error(err)
+            sys.exit(1)
+        assert (args.get('<package>') in packages)
+    # Create config file
+    elif args.get('init'):
+        if os.path.exists(args.get('--config')):
+            logging.error('File already exists.')
+            sys.exit(1)
+        with open(args.get('--config'), 'w') as f:
+            f.write(template)
+
+    # Run build
+    if args.get('build'):
+        system = args.get('<package>')
+        # Packager
+        if system == "love":
+            from love_release.packagers.love import Packager
+            packager = Packager(
+                system,
+                config['general'],
+                config['package:love'])
+        elif system in ["win32", "win64"]:
+            from love_release.packagers.win import Packager
+            packager = Packager(
+                system,
+                config['general'],
+                config['package:%s' % system],
+                love_config=config['package:love'])
+
+        packager.package()

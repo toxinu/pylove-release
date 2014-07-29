@@ -1,0 +1,8 @@
+cache
+*.ini
+build
+source
+*.egg-info
+venv
+__pycache__
+dist
