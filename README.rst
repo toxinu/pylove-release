@@ -65,4 +65,6 @@ Packagers
 You can easily add your very own packager. Take a look at ``love_release/packagers`` directory.
 More documentations are coming.
 
+More packages are coming, OSX, Android, Linux, Deb, Rpm, etc...
+
 .. _LOVE2D: http://love2d.org/
