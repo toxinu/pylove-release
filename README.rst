@@ -13,6 +13,9 @@ Create your configuration file:
 ::
 
     love-release init --config=config.ini
+
+::
+
     cat config.ini  # Truncated
     [general]
     # - name: Game name
