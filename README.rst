@@ -5,6 +5,15 @@ This is a Python application that help you to distribute your `Love2D`_ game for
 
 All your builds are driven by a configuration file.
 
+Features:
+
+- Windows (32&64), Linux, OSX supported (more are coming)
+- Customisable via configuration file
+- Easily hackable
+- Create compressed package or not
+- Exclude files or directorires by platform specifics
+- Pining love version
+
 Usage
 -----
 
